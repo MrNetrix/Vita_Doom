@@ -1,0 +1,82 @@
+10/24/2005 3:30 am GMT
+Changes in Doom-PSP v0.04 S.S. b5:
+
+-Compiled against newer version of the PSPSDK
+
+A graphical glitch that periodically occurred in the other versions of 
+Doom-PSP v0.04 S.S. has been fixed. Doom runs slightly faster now and the 
+graphics have slightly improved.
+
+-Menus changed slightly.
+
+Analog nub works in menus. Holding directional buttons now works to allow
+faster navigation through menus.
+
+-Cleared conflict with the default button configuration without config.ini.
+
+-Added overclocking feature
+
+The CPU clock speed can be changed to run at 222 MHz, 266 MHz, or 333 MHz.
+
+10/03/2005 7:06 am GMT
+Changes in Doom-PSP v0.04 S.S. b4:
+
+-Removed case sensitive WAD lookup.
+
+The last release only worked properly with WAD files with lowercase letters 
+in the filename. This release can work with WAD files that have uppercase letters, 
+lowercase letters, and also with WAD files that have a mixture of uppercase and 
+lowercase letters in the filename.
+
+-Customizable button configuration. Button configuration is read from a text file.
+
+The portion of the program that reads the file mostly remains unchanged from the 
+DoomPSP v0.04u1 release. The method by which the buttons are implemented is the 
+major difference.
+
+-Added a fix that allows both Unix and Windows formatted text files to be read.
+
+This program outputs the configuration changes to a Unix formatted text file.
+The original code only allowed Windows formatted text files to work properly so 
+the output data made by this program could not be read by the program.
+
+-Added a button configuration submenu.
+
+You can edit the button configuration while running the program. The changes 
+can be saved to the configuration text file within the menu. To enter the submenu, 
+press the L Trigger + the R Trigger + START. The layout of the menu is a little jank. 
+You have to select which action you want to change from the right side and then press 
+which button you want to be associated with the action. A swap will occur and the 
+button that was highlighted will take the action of whatever the previous button had. 
+Also, to switch from analog movement to using the DPad, you can select either 
+choice in the menu and press any button to swap the two actions.
+
+07/24/2005 5:15 am GMT
+Changes in Doom-PSP v0.04 S.S. b3:
+
+-Fixed an error with malloc not allocating enough memory for the strings 
+ containing the locations of any WAD files. This would only effect people 
+ trying to build the program from source. I honestly don't know how this 
+ error didn't appear in the binary; I could have sworn that I did a make clean 
+ before making the final build.
+
+-Finally added the m_menu.c file that should have been included with 
+ the previous version source code. Without this file, a save file 
+ could not be read or detected.
+
+-Added a WAD selector.
+
+07/20/2005 3:43 am GMT
+Changes in Doom-PSP v0.04 S.S. b2:
+
+Minor fix to enable the use of the corrupt data icon fix. 
+The folder that Doom-PSP is linked to is dynamically linked 
+now enabling the fix to work and for Doom-PSP not to be confined 
+to being stored in PSP\GAME\DOOM-PSP.
+
+07/19/2005 3:52 am GMT
+Changes in Doom-PSP v0.04 S.S.:
+
+The shoulder buttons are used to strafe, the square button is 
+used to run, the circle button is used to attack, the d-pad is now 
+used for movement and the analog nub is used for weapon selection.
