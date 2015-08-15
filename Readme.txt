@@ -1,6 +1,8 @@
 Vita Doom - PS Vita Doom Port
 
-In order to play Doom, you must add WAD files to cache0:/VitaDefilerClient/Documents/WADs.
+In order to play Doom, you must add WAD files to:
+cache0:/VitaDefilerClient/Documents/WADs
+
 The easiest way to accomplish that is via FTP with FTPVita. If you do not know what
 "WAD files" are, start looking here: https://www.google.ca/search?q=doom+wad
 
