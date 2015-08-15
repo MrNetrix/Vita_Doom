@@ -286,11 +286,6 @@ unsigned long Read_Key(void) {
         draw_mode = 0;
     }
 
-    if (ctl.buttons == PSP2_CTRL_CIRCLE)
-    {
-        printf("output");
-    }
-
 	if (ctl.buttons == control_bef_ctl) {
 		return 0;
 	}
@@ -309,11 +304,6 @@ unsigned long Read_Key3(void) {
     else
     {
         draw_mode = 0;
-    }
-
-    if (ctl.buttons == PSP2_CTRL_CIRCLE)
-    {
-        printf("output2");
     }
 
     if (ctl.ly >= 0xD0) ctl.buttons |= PSP2_CTRL_DOWN;  // DOWN
