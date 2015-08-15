@@ -1,0 +1,42 @@
+TITLE = Vita_Doom
+HOMEBREW_C_SRCS := $(wildcard src/*.c)
+HOMEBREW_CPP_SRCS := $(wildcard src/*.cpp)
+HOMEBREW_OBJS = $(patsubst src/%,bin/%,$(HOMEBREW_C_SRCS:.c=.o)) $(patsubst src/%,bin/%,$(HOMEBREW_CPP_SRCS:.cpp=.o))
+
+CC = arm-none-eabi-gcc
+CCP = arm-none-eabi-g++
+CFLAGS = -Wall -nostdlib -fno-exceptions -Ofast -DPSP2 -DDEBUG -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard
+CPPFLAGS = $(CFLAGS)
+LDFLAGS = -L$(PSP2SDK)/lib
+INC = -I$(PSP2SDK)/include
+
+all: $(TITLE)
+
+TEST_OUTPUT = bin/*.S out/$(TITLE).elf out/$(TITLE).velf bin/*.o lib/*.a lib/*.o lib/*.S lib/Makefile
+LIBS = lib/libSceLibc.a lib/libSceLibKernel.a lib/libSceTouch.a lib/libSceDisplay.a lib/libSceDisplayUser.a lib/libSceGxm.a \
+lib/libSceSysmem.a lib/libSceCtrl.a lib/libSceThreadmgr.a lib/libSceProcessmgr.a lib/libSceLibm.a lib/libSceIofilemgr.a \
+lib/libSceRtcUser.a
+
+.PHONY: $(TITLE)
+$(TITLE): out/$(TITLE).elf
+	vita-elf-create out/$(TITLE).elf out/$(TITLE).velf db.json
+
+out/$(TITLE).elf: $(HOMEBREW_OBJS) $(LIBS)
+	mkdir -p out
+	$(CC) -Wl,-q -nostartfiles -nostdlib -fno-exceptions $(LDFLAGS) $(HOMEBREW_OBJS) -lvita2d $(LIBS) -o $@ -lgcc
+
+bin/%.o: src/%.c
+	mkdir -p bin
+	$(CC) -march=armv7-a -mthumb $(INC) $(CFLAGS) -c $< -o $@
+
+bin/%.o: src/%.cpp
+	mkdir -p bin
+	$(CCP) -march=armv7-a -mthumb $(INC) $(CFLAGS) -c $< -o $@
+
+lib/%.a: db.json
+	mkdir -p lib
+	vita-libs-gen db.json lib/
+	$(MAKE) -C lib $*.a
+
+clean:
+	rm -f $(ALL_OBJS:.o=.d) $(TARGETS) $(TEST_OUTPUT)
