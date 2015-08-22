@@ -73,7 +73,12 @@ int debug_res = 0x0;
 
 int main(int argc, char** argv)
 {
-    printf("DOOM");
+#ifdef USE_DEBUGNET
+    int ret = debugNetInit(DEBUGNET_IP, DEBUGNET_PORT, DEBUG);
+    printf("debugNetInit: %d", ret);
+#endif
+
+    printf("DOOM started");
 
     myargc = 0;
     myargv = 0;

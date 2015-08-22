@@ -26,6 +26,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef USE_DEBUGNET
+#include <debugnet.h>
+#endif
+
 //#include <pspkernel.h>
 //#include <pspdisplay.h>
 //#include <pspdebug.h>
@@ -299,8 +303,14 @@ typedef enum
 
 #define _toupper toupper
 
-//#define printf__(...) printf(...)
-//#define printf(...)
+#ifdef USE_DEBUGNET
+#define printf_(msg, ...) debugNetPrintf(msg, __VA_ARGS__)
+#else
+#define printf_(msg, ...)
+#endif
+
+#define printf(msg, ...) printf_(INFO, msg "\n", ##__VA_ARGS__)
+#define printfs(msg, ...) printf_(INFO, msg, ##__VA_ARGS__)
 
 // DOOM basic types (boolean),
 //  and max/min values.

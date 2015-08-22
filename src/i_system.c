@@ -143,7 +143,11 @@ void I_Quit (void)
     D_QuitNetGame ();
     I_ShutdownSound();
     I_ShutdownMusic();
-    I_ShutdownGraphics() ;
+    I_ShutdownGraphics();
+
+#ifdef USE_DEBUGNET
+    debugNetFinish();
+#endif
 
     //exit(0x1337);
     sceKernelExitProcess(0);
@@ -179,9 +183,7 @@ extern boolean demorecording;
 
 void I_Error (char *error, ...)
 {
- 
-
-    printf(error);
+    printfs(error);
 
     // Shutdown. Here might be other errors.
     if (demorecording)

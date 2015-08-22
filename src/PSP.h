@@ -92,6 +92,9 @@ void pgScreenFrame(long mode,long frame);
 
 #define PSP2_DIR(path) "cache0:/VitaDefilerClient/" path
 
+#define DEBUGNET_IP "192.168.1.113"
+#define DEBUGNET_PORT 18194
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

@@ -1,39 +1,41 @@
-
+TITLE = Vita_Doom
 HOMEBREW_C_SRCS := $(wildcard src/*.c)
+HOMEBREW_CPP_SRCS := $(wildcard src/*.cpp)
+HOMEBREW_OBJS = $(patsubst src/%,bin/%,$(HOMEBREW_C_SRCS:.c=.o)) $(patsubst src/%,bin/%,$(HOMEBREW_CPP_SRCS:.cpp=.o))
 
-TARGET = Vita_Doom
-OBJS   = $(patsubst src/%,bin/%,$(HOMEBREW_C_SRCS:.c=.o))
+PREFIX = arm-vita-eabi
+CC = $(PREFIX)-gcc
+CCP = $(PREFIX)-g++
+CFLAGS = -Wall -fno-exceptions -Ofast -DPSP2 -mcpu=cortex-a9 -mthumb -mfpu=neon
+CPPFLAGS = $(CFLAGS)
 
-LIBS = -lc_stub -lvita2d -lm_stub -lSceKernel_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub
+all: $(TITLE)
 
-PREFIX  = $(DEVKITARM)/bin/arm-none-eabi
-CC      = $(PREFIX)-gcc
-READELF = $(PREFIX)-readelf
-OBJDUMP = $(PREFIX)-objdump
-CFLAGS = -DPSP2 -specs=psp2.specs
-ASFLAGS = $(CFLAGS)
+TEST_OUTPUT = bin/*.S out/$(TITLE).elf out/$(TITLE).velf bin/*.o lib/*.a lib/*.o lib/*.S # lib/Makefile
+LIBS = -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub
 
-CFLAGS  += -Wall -Ofast -fno-exceptions
+debug: CFLAGS += -DDEBUG
 
-all: out/$(TARGET)_fixup.elf
+debugnet: CFLAGS += -DUSE_DEBUGNET
+debugnet: LIBS := -ldebugnet -lSceNet_stub -lSceNetCtl_stub $(LIBS)
+debugnet: all
 
-debug: CFLAGS += -DSHOW_DEBUG=1 -DDEBUG 
-debug: all
+.PHONY: $(TITLE)
+$(TITLE): out/$(TITLE).elf
+	$(PREFIX)-strip -g $<
+	vita-elf-create out/$(TITLE).elf out/$(TITLE).velf db.json
 
-release: CFLAGS += -DRELEASE
-release: all
-
-%_fixup.elf: %.elf
-	psp2-fixup -q -S $< $@
-
-out/$(TARGET).elf: $(OBJS)
+out/$(TITLE).elf: $(HOMEBREW_OBJS)
 	mkdir -p out
-	$(CC) -Wl,-q $(CFLAGS) $^ $(LIBS) -o $@
+	$(CC) -Wl,-q $(LDFLAGS) $(HOMEBREW_OBJS) -lvita2d -lm $(LIBS) -o $@
 
 bin/%.o: src/%.c
 	mkdir -p bin
 	$(CC) $(CFLAGS) -c $< -o $@
 
+bin/%.o: src/%.cpp
+	mkdir -p bin
+	$(CCP) $(CFLAGS) -c $< -o $@
+
 clean:
-	@rm -rf out/$(TARGET)_fixup.elf out/$(TARGET).elf bin/$(OBJS)
-	@echo "Cleaned"
+	rm -f $(ALL_OBJS:.o=.d) $(TARGETS) $(TEST_OUTPUT)
