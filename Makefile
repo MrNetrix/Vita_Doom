@@ -39,3 +39,6 @@ bin/%.o: src/%.cpp
 
 clean:
 	rm -f $(ALL_OBJS:.o=.d) $(TARGETS) $(TEST_OUTPUT)
+
+rebuild: clean
+rebuild: all
