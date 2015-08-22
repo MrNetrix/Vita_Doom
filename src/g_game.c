@@ -1553,8 +1553,8 @@ void G_RecordDemo (char* name)
     int				maxsize;
 	
     usergame = false; 
-    strcpy_s(demoname, 32, name); 
-    strcat_s(demoname, 32, ".lmp"); 
+    strcpy(demoname, name); 
+    strcat(demoname, ".lmp"); 
     maxsize = 0x20000;
     i = M_CheckParm ("-maxdemo");
     if (i && i<myargc-1)

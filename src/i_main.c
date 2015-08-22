@@ -47,6 +47,8 @@ PSP2_MODULE_INFO(0, 0, "Doom-PSP");
 extern void _DisableFPUExceptions();
 extern void sound_callback(void *buf, unsigned int reqn);
 
+SceCtrlData ctl;
+
 // ---------------------------------------------------------------------------------
 #define MAXDEPTH  16
 #define MAXDIRNUM 1024
@@ -67,32 +69,18 @@ int				cbuf_curpos[MAXDEPTH];
 int				now_depth;
 char			buf[BUFSIZE];
 
-int res = 0x0;
+int debug_res = 0x0;
 
-void printf___(const char* format, ...)
-{
-
-
-}
-
-int _start()
-{
-    return main();
-}
-
-int main()
+int main(int argc, char** argv)
 {
     printf("DOOM");
 
-    int argc = 0;
-    char** argv = 0;
-
-    myargc = argc;
-    myargv = argv;
+    myargc = 0;
+    myargv = 0;
 
     doomwaddir = PSP2_DIR("Documents/");
     strcpy_s(doomwaddir2, 256, doomwaddir);
-    strcat_s(doomwaddir2, 256, "WADS/");
+    strcat(doomwaddir2, "WADS/");
 
     printf("WAD folder: %s", doomwaddir2);
 
@@ -129,7 +117,7 @@ switch(Control()) {
 		case 2:
                         pgFillvram(0);
                         strcpy_s(target, 264, doomwaddir2);
-                        strcat_s(target, 264, dlist[dlist_curpos].name);
+                        strcat(target, dlist[dlist_curpos].name);
 
                         printf("target: %s", target);
 
@@ -439,8 +427,8 @@ int Control(void) {
 		if (dlist[dlist_curpos].type & TYPE_DIR) {
 			if (now_depth<MAXDEPTH) {
 				// pathÚ®
-				strcat_s(doomwaddir2, 256, dlist[dlist_curpos].name);
-				strcat_s(doomwaddir2, 256, "/");
+				strcat(doomwaddir2, dlist[dlist_curpos].name);
+				strcat(doomwaddir2, "/");
 				cbuf_start[now_depth] = dlist_start;
 				cbuf_curpos[now_depth] = dlist_curpos;
 				dlist_start  = 0;

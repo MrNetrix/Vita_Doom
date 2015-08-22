@@ -7,7 +7,7 @@ typedef unsigned char      uint8_t;
 typedef signed   char      sint8_t;
 typedef unsigned short     uint16_t;
 typedef signed   short     sint16_t;
-typedef unsigned int       uint32_t;
+//typedef unsigned int       uint32_t;
 typedef signed   int       sint32_t;
 
  
@@ -49,4 +49,9 @@ sint32_t _atoi(uint8_t *s)
     return i;
   
 #undef ISNUM  
+}
+
+int strcpy_s(char* dest, size_t size, const char* src)
+{
+    return strncpy(dest, src, size);
 }

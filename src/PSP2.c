@@ -69,7 +69,6 @@ byte *paltex_data;
 uint32_t *palette_data, *font_data;
 
 int palette_length = 256;
-int draw_mode = 0;
 
 void draw_pixel(uint32_t x, uint32_t y, uint32_t color)
 {
@@ -149,8 +148,6 @@ void ScreenFlash(uint32_t color)
 
 void PSP2_Video_Init()
 {
-    printf("PSP2_Video_Init: (%s : %d)", __FILE__, __LINE__);
-
     vita2d_init();
 
     //ScreenFlash(RGBA8(255, 0, 0, 255));

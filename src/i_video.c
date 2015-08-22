@@ -55,7 +55,7 @@ int d_clist_start = 0;
 int d_clist_curpos = 0;
 boolean analog = 0;
 
-extern int draw_mode;
+extern SceCtrlData ctl;
 
 static unsigned int __attribute__((aligned(16))) list[262144];
 
@@ -277,15 +277,6 @@ unsigned long Read_Key(void) {
 
     sceCtrlPeekBufferPositive(0, &ctl, 1);
 
-    if (ctl.buttons == PSP2_CTRL_CROSS)
-    {
-        draw_mode = 1;
-    }
-    else
-    {
-        draw_mode = 0;
-    }
-
 	if (ctl.buttons == control_bef_ctl) {
 		return 0;
 	}
@@ -296,15 +287,6 @@ unsigned long Read_Key(void) {
 unsigned long Read_Key3(void) {
 
     sceCtrlPeekBufferPositive(0, &ctl, 1);
-
-    if (ctl.buttons == PSP2_CTRL_CROSS)
-    {
-        draw_mode = 1;
-    }
-    else
-    {
-        draw_mode = 0;
-    }
 
     if (ctl.ly >= 0xD0) ctl.buttons |= PSP2_CTRL_DOWN;  // DOWN
     if (ctl.ly <= 0x30) ctl.buttons |= PSP2_CTRL_UP;    // UP
@@ -516,16 +498,14 @@ void I_GetEvent()
                         break;
                     }
 
+                    num = wp_supershotgun;
                     looped = true;
                 }
-
-					num = wp_supershotgun;
 				if (plyrweap->weaponowned[num])
 				{
 					plyrweap->pendingweapon = num;
 					break;
 				}
-
 			}
 
 			kbevent.type = ev_keydown;
@@ -1093,7 +1073,10 @@ void I_UpdateNoBlit (void)
 // I_FinishUpdate
 //
 
+#define FPS_TIMES_COUNT 60
 uint64_t lastTick = 0;
+int fpsTimes[FPS_TIMES_COUNT];
+int fpsIndex = 0;
 unsigned char fpstext[16];
 
 void DisplayFPS()
@@ -1107,15 +1090,31 @@ void DisplayFPS()
     }
 
     uint64_t difference = currentTick - lastTick;
-    int fps = sceRtcGetTickResolution() / (int) difference;
+    lastTick = currentTick;
 
-    sprintf(fpstext, "FPS: %d", fps);
+    int fps = sceRtcGetTickResolution() / (int) difference;
+    fpsTimes[fpsIndex] = fps;
+
+    if (++fpsIndex == FPS_TIMES_COUNT)
+    {
+        fpsIndex = 0;
+    }
+
+    fps = 0;
+
+    int i;
+    for (i = 0; i < FPS_TIMES_COUNT; ++i)
+    {
+        fps += fpsTimes[i];
+    }
+
+    fps /= FPS_TIMES_COUNT;
 
     PSP2_Video_FillScreen(SCREEN_W * 200);
 
+    sprintf(fpstext, "FPS: %d", fps);
     mh_print(5, 5, fpstext, RGBA8(0, 255, 0, 255), 0, 0);
 
-    lastTick = currentTick;
 }
 
 void I_FinishUpdate (void)

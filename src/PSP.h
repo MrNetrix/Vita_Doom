@@ -58,7 +58,6 @@ struct timezone {
 unsigned long new_pad;
 unsigned long old_pad;
 unsigned long now_pad;
-static SceCtrlData ctl;
 
 enum { 
     TYPE_DIR=0x10, 
