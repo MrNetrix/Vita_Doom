@@ -412,7 +412,14 @@ int W_GetNumForName (char* name)
     i = W_CheckNumForName (name);
     
     if (i == -1)
-      I_Error ("W_GetNumForName: %s not found!", name);
+    {
+        if (strcmp(name, "HELP2") == 0) // Workaround for versions that don't have HELP2. Apparently that's a thing.
+        {
+            return W_GetNumForName("CREDIT");
+        }
+
+        I_Error("W_GetNumForName: %s not found!", name);
+    }
       
     return i;
 }
