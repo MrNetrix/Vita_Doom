@@ -12,7 +12,7 @@ CPPFLAGS = $(CFLAGS)
 all: $(TITLE)
 
 TEST_OUTPUT = bin/*.S out/$(TITLE).elf out/$(TITLE).velf bin/*.o lib/*.a lib/*.o lib/*.S # lib/Makefile
-LIBS = -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub
+LIBS = -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub -lScePower_stub
 
 debug: CFLAGS += -DDEBUG
 

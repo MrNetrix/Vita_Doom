@@ -80,6 +80,12 @@ int main(int argc, char** argv)
 
     printf("DOOM started");
 
+    int res = scePowerSetArmClockFrequency(222);
+    if (res != 0x0)
+    {
+        printf("scePowerSetArmClockFrequency failed! (Normal if not using PSM Unity 1.06.)");
+    }
+
     myargc = 0;
     myargv = 0;
 
