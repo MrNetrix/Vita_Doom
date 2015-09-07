@@ -183,7 +183,13 @@ extern boolean demorecording;
 
 void I_Error (char *error, ...)
 {
-    printfs(error);
+    va_list arglist;
+
+    printf("Error: ");
+    va_start(arglist, error);
+    vprintf(error, arglist);
+    printf("\n");
+    va_end(arglist);
 
     // Shutdown. Here might be other errors.
     if (demorecording)

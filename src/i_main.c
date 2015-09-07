@@ -74,16 +74,18 @@ int debug_res = 0x0;
 int main(int argc, char** argv)
 {
 #ifdef USE_DEBUGNET
-    int ret = debugNetInit(DEBUGNET_IP, DEBUGNET_PORT, DEBUG);
+    int ret = debugNetInit("255.255.255.255", 18194, DEBUG);
     printf("debugNetInit: %d", ret);
 #endif
 
-    printf("DOOM started");
+    printf("DOOM started\n");
 
-    int res = scePowerSetArmClockFrequency(222);
+    setbuf(stdout, NULL);
+
+    int res = scePowerSetArmClockFrequency(50);
     if (res != 0x0)
     {
-        printf("scePowerSetArmClockFrequency failed! (Normal if not using PSM Unity 1.06.)");
+        printf("scePowerSetArmClockFrequency failed! (0x%08x) (Normal if not using PSM Unity 1.06. No clock speed change for you.)\n", res);
     }
 
     myargc = 0;
@@ -93,7 +95,7 @@ int main(int argc, char** argv)
     strcpy_s(doomwaddir2, 256, doomwaddir);
     strcat(doomwaddir2, "WADS/");
 
-    printf("WAD folder: %s", doomwaddir2);
+    printf("WAD folder: %s\n", doomwaddir2);
 
 	//pspAudioInit();
 	//pspAudioSetChannelCallback(0, (void *)&sound_callback);
@@ -129,8 +131,6 @@ switch(Control()) {
                         pgFillvram(0);
                         strcpy_s(target, 264, doomwaddir2);
                         strcat(target, dlist[dlist_curpos].name);
-
-                        printf("target: %s", target);
 
                         pgScreenFlipV();
                         //pspDebugScreenInit();

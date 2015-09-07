@@ -1285,7 +1285,7 @@ void G_DoSaveGame (void)
         int result = sceIoMkdir(name, 0777);
         if (result != 0 && result != 0x80010011)
         {
-            printf("sceIoMkdir error: 0x%x [%s]", result, name);
+            printf("sceIoMkdir error: 0x%x [%s]\n", result, name);
         }
 
         sprintf(name, "%s/%s", name, savedir);
@@ -1293,7 +1293,7 @@ void G_DoSaveGame (void)
         result = sceIoMkdir(name, 0777);
         if (result != 0 && result != 0x80010011)
         {
-            printf("sceIoMkdir error: 0x%x [%s]", result, name);
+            printf("sceIoMkdir error: 0x%x [%s]\n", result, name);
         }
 
         sprintf(name, "%s/"SAVEGAMENAME"%d.dsg", name, savegameslot);
@@ -1615,7 +1615,7 @@ void G_DoPlayDemo (void)
       //fprintf( stderr, "Demo is from a different game version!\n");
       gameaction = ga_nothing;
 
-      printf("Demo is from a different game version! (Got %d, expected %d) Let's try to run anyway...", demoversion, VERSION_NUM);
+      printf("Demo is from a different game version! (Got %d, expected %d) You can probably ignore this...\n", demoversion, VERSION_NUM);
 
       //return;
     }

@@ -496,13 +496,6 @@ void R_InitTextures (void)
     temp1 = W_GetNumForName ("S_START");  // P_???????
     temp2 = W_GetNumForName ("S_END") - 1;
     temp3 = ((temp2-temp1+63)/64) + ((numtextures+63)/64);
-    /*printf("[");
-    for (i = 0; i < temp3; i++)
-	printf(" ");
-    printf("         ]");
-    for (i = 0; i < temp3; i++)
-	printf("\x8");
-    printf("\x8\x8\x8\x8\x8\x8\x8\x8\x8\x8");*/
 	
     for (i=0 ; i<numtextures ; i++, directory++)
     {
@@ -571,6 +564,8 @@ void R_InitTextures (void)
 	totalwidth += texture->width;
     }
 
+    printf("\n");
+
     Z_Free (maptex1);
     if (maptex2)
 	Z_Free (maptex2);
@@ -636,6 +631,8 @@ void R_InitSpriteLumps (void)
 	spriteoffset[i] = SHORT(patch->leftoffset)<<FRACBITS;
 	spritetopoffset[i] = SHORT(patch->topoffset)<<FRACBITS;
     }
+
+    printf("\n");
 }
 
 
@@ -667,13 +664,13 @@ void R_InitColormaps (void)
 void R_InitData (void)
 {
     R_InitTextures ();
-    printf ("InitTextures");
+    printf ("InitTextures\n");
     R_InitFlats ();
-    printf ("InitFlats");
+    printf ("InitFlats\n");
     R_InitSpriteLumps ();
-    printf ("InitSprites");
+    printf ("InitSprites\n");
     R_InitColormaps ();
-    printf ("InitColormaps");
+    printf ("InitColormaps\n");
 }
 
 

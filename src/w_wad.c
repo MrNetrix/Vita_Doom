@@ -171,7 +171,7 @@ void W_AddFile (char *filename)
 	return;
     }
 
-    printf (" adding %s\n",filename);
+    printf ("Adding %s\n",filename);
     startlump = numlumps;
 	
     if (I_strncasecmp (filename+strlen(filename)-3 , "wad", 3 ) )

@@ -559,7 +559,7 @@ void D_AddFile (char *file)
     int     numwadfiles;
     char    *newfile;
 
-    printf("Adding file: %s", file);
+    printf("Adding file: %s\n", file);
 	
     for (numwadfiles = 0 ; wadfiles[numwadfiles] ; numwadfiles++)
 	;
@@ -941,18 +941,17 @@ void D_DoomMain ()
     }
  
     // init subsystems
-    printf ("V_Init: allocate screens.");
+    printf ("V_Init: allocate screens.\n");
     V_Init ();
 
-    printf ("M_LoadDefaults: Load system defaults.");
+    printf ("M_LoadDefaults: Load system defaults.\n");
     M_LoadDefaults ();              // load before initing other systems
 
-    printf ("Z_Init: Init zone memory allocation daemon.");
+    printf ("Z_Init: Init zone memory allocation daemon.\n");
     Z_Init ();
 
-    printf ("W_Init: Init WADfiles.");
+    printf ("W_Init: Init WADfiles.\n");
     W_InitMultipleFiles (wadfiles);
-    printf("added\n");
 
     // Check for -file in shareware
     if (modifiedgame)
@@ -1021,28 +1020,28 @@ void D_DoomMain ()
 	break;
     }
 
-    printf("M_Init: Init miscellaneous info.");
+    printf("M_Init: Init miscellaneous info.\n");
     M_Init ();
 
-    printf("R_Init: Init DOOM refresh daemon - ");
+    printf("R_Init: Init DOOM refresh daemon - \n");
     R_Init ();
 
-    printf("P_Init: Init Playloop state.");
+    printf("P_Init: Init Playloop state.\n");
     P_Init ();
 
-    printf("I_Init: Setting up machine state.");
+    printf("I_Init: Setting up machine state.\n");
     I_Init();
 
-    printf("D_CheckNetGame: Checking network game status.");
+    printf("D_CheckNetGame: Checking network game status.\n");
     D_CheckNetGame ();
 
-    printf("S_Init: Setting up sound.");
+    printf("S_Init: Setting up sound.\n");
     S_Init (snd_SfxVolume /* *8 */, snd_MusicVolume /* *8*/ );
 
-    printf("HU_Init: Setting up heads up display.");
+    printf("HU_Init: Setting up heads up display.\n");
     HU_Init ();
 
-    printf("ST_Init: Init status bar.");
+    printf("ST_Init: Init status bar.\n");
     ST_Init ();
 
     // start the apropriate game based on parms

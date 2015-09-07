@@ -149,7 +149,7 @@ M_ReadFile
     SceUID file = sceIoOpen(name, PSP2_O_RDONLY, 0777);
     if (file <= 0)
     {
-        printf("M_ReadFile sceIoOpen error: (0x%x) File: %s", file, name);
+        printf("M_ReadFile sceIoOpen error: (0x%x) File: %s\n", file, name);
         return 0;
     }
 

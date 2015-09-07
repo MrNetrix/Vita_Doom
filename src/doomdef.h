@@ -304,13 +304,8 @@ typedef enum
 #define _toupper toupper
 
 #ifdef USE_DEBUGNET
-#define printf_(msg, ...) debugNetPrintf(msg, __VA_ARGS__)
-#else
-#define printf_(msg, ...)
+#define printf(msg, ...) debugNetPrintf(INFO, msg, ##__VA_ARGS__)
 #endif
-
-#define printf(msg, ...) printf_(INFO, msg "\n", ##__VA_ARGS__)
-#define printfs(msg, ...) printf_(INFO, msg, ##__VA_ARGS__)
 
 // DOOM basic types (boolean),
 //  and max/min values.

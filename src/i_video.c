@@ -1086,7 +1086,7 @@ void DisplayFPS()
     int result = sceRtcGetCurrentTick(&currentTick);
     if (result != 0)
     {
-        printf("sceRtcGetCurrentTick : 0x%x", currentTick);
+        printf("sceRtcGetCurrentTick : 0x%x\n", currentTick);
     }
 
     uint64_t difference = currentTick - lastTick;

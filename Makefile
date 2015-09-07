@@ -23,7 +23,7 @@ debugnet: all
 .PHONY: $(TITLE)
 $(TITLE): out/$(TITLE).elf
 	$(PREFIX)-strip -g $<
-	vita-elf-create out/$(TITLE).elf out/$(TITLE).velf db.json
+	vita-elf-create out/$(TITLE).elf out/$(TITLE).velf db.json extra.json
 
 out/$(TITLE).elf: $(HOMEBREW_OBJS)
 	mkdir -p out
