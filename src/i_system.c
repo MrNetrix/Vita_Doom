@@ -149,8 +149,7 @@ void I_Quit (void)
     debugNetFinish();
 #endif
 
-    //exit(0x1337);
-    sceKernelExitProcess(0);
+    uvl_exit(0);
 }
 
 void I_WaitVBL(int count)
