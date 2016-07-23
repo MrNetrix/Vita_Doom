@@ -12,7 +12,7 @@ CPPFLAGS = $(CFLAGS)
 all: $(TITLE)
 
 TEST_OUTPUT = bin/*.S out/$(TITLE).elf out/$(TITLE).velf bin/*.o lib/*.a lib/*.o lib/*.S # lib/Makefile
-LIBS = -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub -lScePower_stub
+LIBS = -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub -lScePower_stub -lSceSysmodule_stub -lSceCommonDialog_stub
 
 debug: CFLAGS += -DDEBUG
 
@@ -22,8 +22,9 @@ debugnet: all
 
 .PHONY: $(TITLE)
 $(TITLE): out/$(TITLE).elf
-	$(PREFIX)-strip -g $<
-	vita-elf-create out/$(TITLE).elf out/$(TITLE).velf db.json extra.json
+	# $(PREFIX)-strip -g $<
+	vita-elf-create out/$(TITLE).elf out/$(TITLE).velf
+	make_fself out/$(TITLE).velf out/eboot.bin
 
 out/$(TITLE).elf: $(HOMEBREW_OBJS)
 	mkdir -p out

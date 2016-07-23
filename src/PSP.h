@@ -13,7 +13,7 @@ extern "C" {
 
 #include <psp2/types.h>
 #include <psp2/ctrl.h>
-#include <Psp2/power.h>
+#include <psp2/power.h>
 #include <psp2/touch.h>
 #include <psp2/io/fcntl.h>
 #include <psp2/moduleinfo.h>
@@ -91,7 +91,7 @@ void mh_print(int x, int y, unsigned char *str, uint32_t col, int backcol, int f
 void pgInit();
 void pgScreenFrame(long mode,long frame);
 
-#define PSP2_DIR(path) "cache0:/VitaDefilerClient/" path
+#define PSP2_DIR(path) "ux0:/data/" path
 
 #ifdef __cplusplus
 }
