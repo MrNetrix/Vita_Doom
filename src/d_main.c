@@ -618,7 +618,7 @@ void IdentifyVersion (void)
     doom2fwad = malloc(strlen(doomwaddir)+1+14+1);
     sprintf(doom2fwad, "%sWADS/doom2f.wad", doomwaddir);
 
-    home = PSP2_DIR("Documents");
+    home = PSP2_DIR("Doom");
     sprintf(basedefault, "%s/.doomrc", home);
 
     if (M_CheckParm ("-shdev"))

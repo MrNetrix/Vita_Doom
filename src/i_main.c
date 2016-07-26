@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     myargc = 0;
     myargv = 0;
 
-    doomwaddir = PSP2_DIR("Documents/");
+    doomwaddir = PSP2_DIR("Doom/");
     strcpy_s(doomwaddir2, 256, doomwaddir);
     strcat(doomwaddir2, "WADS/");
 

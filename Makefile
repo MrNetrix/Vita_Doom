@@ -22,9 +22,8 @@ debugnet: all
 
 .PHONY: $(TITLE)
 $(TITLE): out/$(TITLE).elf
-	# $(PREFIX)-strip -g $<
 	vita-elf-create out/$(TITLE).elf out/$(TITLE).velf
-	make_fself out/$(TITLE).velf out/eboot.bin
+	vita-make-fself out/$(TITLE).velf out/eboot.bin
 
 out/$(TITLE).elf: $(HOMEBREW_OBJS)
 	mkdir -p out
