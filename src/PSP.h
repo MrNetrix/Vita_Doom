@@ -13,7 +13,7 @@ extern "C" {
 
 #include <psp2/types.h>
 #include <psp2/ctrl.h>
-#include <Psp2/power.h>
+#include <psp2/power.h>
 #include <psp2/touch.h>
 #include <psp2/io/fcntl.h>
 #include <psp2/moduleinfo.h>
