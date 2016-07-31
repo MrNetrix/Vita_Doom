@@ -1,7 +1,8 @@
 Vita Doom - PS Vita Doom Port
 
 In order to play Doom, you must add WAD files to:
-cache0:/VitaDefilerClient/Documents/WADs
+cache0:/VitaDefilerClient/Documents/WADs (for Rejuvenate users)
+ux0:/data/doom/WADs (for HENkaku users)
 
 The easiest way to accomplish that is via FTP with FTPVita. If you do not know what
 "WAD files" are, start looking here: https://www.google.ca/search?q=doom+wad
