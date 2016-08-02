@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     myargc = 0;
     myargv = 0;
 
-    doomwaddir = PSP2_DIR("Documents/");
+    doomwaddir = PSP2_DIR("Doom/");
     strcpy_s(doomwaddir2, 256, doomwaddir);
     strcat(doomwaddir2, "WADS/");
 
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
 
 	//sceCtrlSetSamplingCycle(0);
 
-	//int result = sceCtrlSetSamplingMode(PSP2_CTRL_MODE_ANALOG);
+	//int result = sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
  //   if (result < 0)
  //   {
  //       printf("sceCtrlSetSamplingMode : 0x%x", result);
@@ -385,10 +385,10 @@ void Read_Key2() {
 	static int n=0;
     sceCtrlPeekBufferPositive(0, (SceCtrlData *) &ctl, 1);
 
-	if (ctl.ly >= 0xD0) ctl.buttons|=PSP2_CTRL_DOWN;  // DOWN
-	if (ctl.ly <= 0x30) ctl.buttons|=PSP2_CTRL_UP;    // UP
-	if (ctl.lx <= 0x30) ctl.buttons|=PSP2_CTRL_LEFT;  // LEFT
-	if (ctl.lx >= 0xD0) ctl.buttons|=PSP2_CTRL_RIGHT; // RIGHT
+	if (ctl.ly >= 0xD0) ctl.buttons|=SCE_CTRL_DOWN;  // DOWN
+	if (ctl.ly <= 0x30) ctl.buttons|=SCE_CTRL_UP;    // UP
+	if (ctl.lx <= 0x30) ctl.buttons|=SCE_CTRL_LEFT;  // LEFT
+	if (ctl.lx >= 0xD0) ctl.buttons|=SCE_CTRL_RIGHT; // RIGHT
 
 	now_pad = ctl.buttons;
 	new_pad = now_pad & ~old_pad;
@@ -411,30 +411,30 @@ int Control(void) {
 	Read_Key2();
 	pgWaitV();
 	
-	if (new_pad & PSP2_CTRL_UP) {
+	if (new_pad & SCE_CTRL_UP) {
 		if (dlist_curpos > 0) {
 			dlist_curpos--;
 			if (dlist_curpos < dlist_start) { dlist_start = dlist_curpos; }
 		}
 	}
-	if (new_pad & PSP2_CTRL_DOWN) {
+	if (new_pad & SCE_CTRL_DOWN) {
 		if (dlist_curpos < (dlist_num-1)) {
 			dlist_curpos++;
 			if (dlist_curpos >= (dlist_start+PATHLIST_H)) { dlist_start++; }
 		}
 	}
-	if (new_pad & PSP2_CTRL_LEFT) {
+	if (new_pad & SCE_CTRL_LEFT) {
 		dlist_curpos -= PATHLIST_H;
 		if (dlist_curpos <  0)          { dlist_curpos = 0;           }
 		if (dlist_curpos < dlist_start) { dlist_start = dlist_curpos; }
 	}
-	if (new_pad & PSP2_CTRL_RIGHT) {
+	if (new_pad & SCE_CTRL_RIGHT) {
 		dlist_curpos += PATHLIST_H;
 		if (dlist_curpos >= dlist_num) { dlist_curpos = dlist_num-1; }
 		while (dlist_curpos >= (dlist_start+PATHLIST_H)) { dlist_start++; }
 	}
 
-	if (new_pad & PSP2_CTRL_CIRCLE) {
+	if (new_pad & SCE_CTRL_CIRCLE) {
 		if (dlist[dlist_curpos].type & TYPE_DIR) {
 			if (now_depth<MAXDEPTH) {
 				// pathÚ®
@@ -463,7 +463,7 @@ int Control(void) {
 			}
 		}
 	}
-	if (new_pad & PSP2_CTRL_CROSS) {
+	if (new_pad & SCE_CTRL_CROSS) {
 		if (now_depth > 0) {
 			// pathÚ®
 			for(i=0;i<MAXPATH;i++) {

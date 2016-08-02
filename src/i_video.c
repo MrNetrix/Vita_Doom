@@ -288,10 +288,10 @@ unsigned long Read_Key3(void) {
 
     sceCtrlPeekBufferPositive(0, &ctl, 1);
 
-    if (ctl.ly >= 0xD0) ctl.buttons |= PSP2_CTRL_DOWN;  // DOWN
-    if (ctl.ly <= 0x30) ctl.buttons |= PSP2_CTRL_UP;    // UP
-    if (ctl.lx <= 0x30) ctl.buttons |= PSP2_CTRL_LEFT;  // LEFT
-    if (ctl.lx >= 0xD0) ctl.buttons |= PSP2_CTRL_RIGHT; // RIGHT 
+    if (ctl.ly >= 0xD0) ctl.buttons |= SCE_CTRL_DOWN;  // DOWN
+    if (ctl.ly <= 0x30) ctl.buttons |= SCE_CTRL_UP;    // UP
+    if (ctl.lx <= 0x30) ctl.buttons |= SCE_CTRL_LEFT;  // LEFT
+    if (ctl.lx >= 0xD0) ctl.buttons |= SCE_CTRL_RIGHT; // RIGHT 
 
     if (ctl.buttons == control_bef_ctl) {
 		return 0;
@@ -324,19 +324,19 @@ void I_GetEvent()
  	    if (ctl.lx >= 0xD0) event.data2 = 1;  // RIGHT
 	}
     else {
-        if (ctl.buttons & PSP2_CTRL_DOWN)	event.data3 = 1;  // DOWN
-        if (ctl.buttons & PSP2_CTRL_UP) 	event.data3 = -1;    // UP
-        if (ctl.buttons & PSP2_CTRL_LEFT)	event.data2 = -1;  // LEFT
-        if (ctl.buttons & PSP2_CTRL_RIGHT)	event.data2 = 1;  // RIGHT
+        if (ctl.buttons & SCE_CTRL_DOWN)	event.data3 = 1;  // DOWN
+        if (ctl.buttons & SCE_CTRL_UP) 	event.data3 = -1;    // UP
+        if (ctl.buttons & SCE_CTRL_LEFT)	event.data2 = -1;  // LEFT
+        if (ctl.buttons & SCE_CTRL_RIGHT)	event.data2 = 1;  // RIGHT
     }
 
     //printf("I_GetEvent: buttons: 0x%x data1: %d data2: %d data3: %d", ctl.buttons, event.data1, event.data2, event.data3);
 
 	D_PostEvent(&event);
 	
-    if (key & PSP2_CTRL_LTRIGGER) {
-        if (key & PSP2_CTRL_RTRIGGER) {
-            if (key & PSP2_CTRL_START) {
+    if (key & SCE_CTRL_LTRIGGER) {
+        if (key & SCE_CTRL_RTRIGGER) {
+            if (key & SCE_CTRL_START) {
 	            NewPrompter();
 	            I_FinishUpdate2();
 	        }
@@ -346,7 +346,7 @@ void I_GetEvent()
 	
 	if (d_controls[1] == KEY_ENTER || d_controls[1] == KEY_ESCAPE ||
 	    d_controls[1] == ' ' || d_controls[1] == KEY_TAB) {
-	    if (key & PSP2_CTRL_START)
+	    if (key & SCE_CTRL_START)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[1];
@@ -360,7 +360,7 @@ void I_GetEvent()
 	    }  
 	}
 	else {
-	    if (ctl.buttons & PSP2_CTRL_START)
+	    if (ctl.buttons & SCE_CTRL_START)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[1];
@@ -375,7 +375,7 @@ void I_GetEvent()
 	}
 	if (d_controls[2] == KEY_ENTER || d_controls[2] == KEY_ESCAPE ||
 	    d_controls[2] == ' ' || d_controls[2] == KEY_TAB) {
- 	    if (key & PSP2_CTRL_SELECT)
+ 	    if (key & SCE_CTRL_SELECT)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[2];
@@ -389,7 +389,7 @@ void I_GetEvent()
 	    }  
 	}
 	else {
-	    if (ctl.buttons & PSP2_CTRL_SELECT)
+	    if (ctl.buttons & SCE_CTRL_SELECT)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[2];
@@ -404,7 +404,7 @@ void I_GetEvent()
 	}
 	if (d_controls[3] == KEY_ENTER || d_controls[3] == KEY_ESCAPE ||
 	    d_controls[3] == ' ' || d_controls[3] == KEY_TAB) {
-	    if (key & PSP2_CTRL_CROSS)
+	    if (key & SCE_CTRL_CROSS)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[3];
@@ -418,7 +418,7 @@ void I_GetEvent()
 	    }
 	}
 	else {
-	    if (ctl.buttons & PSP2_CTRL_CROSS)
+	    if (ctl.buttons & SCE_CTRL_CROSS)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[3];
@@ -443,7 +443,7 @@ void I_GetEvent()
 		if (analog) {
 		
 		
-		if (key & PSP2_CTRL_UP)
+		if (key & SCE_CTRL_UP)
 		{
             looped = false;
 
@@ -483,7 +483,7 @@ void I_GetEvent()
 		D_PostEvent(&kbevent);
 		}  
 		
-		if (key & PSP2_CTRL_DOWN)
+		if (key & SCE_CTRL_DOWN)
         {
             looped = false;
 
@@ -586,7 +586,7 @@ void I_GetEvent()
 
 	if (d_controls[5] == KEY_ENTER || d_controls[5] == KEY_ESCAPE ||
 	    d_controls[5] == ' ' || d_controls[5] == KEY_TAB) {
-	    if (key & PSP2_CTRL_TRIANGLE)
+	    if (key & SCE_CTRL_TRIANGLE)
 	    {
 	    	kbevent.type = ev_keydown;
 	    	kbevent.data1 = d_controls[5];
@@ -600,7 +600,7 @@ void I_GetEvent()
 	    }
 	}
 	else {
-	    if (ctl.buttons & PSP2_CTRL_TRIANGLE)
+	    if (ctl.buttons & SCE_CTRL_TRIANGLE)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[5];
@@ -615,7 +615,7 @@ void I_GetEvent()
 	}
 	if (d_controls[8] == KEY_ENTER || d_controls[8] == KEY_ESCAPE ||
 	    d_controls[8] == ' ' || d_controls[8] == KEY_TAB) {
-        if (key & PSP2_CTRL_LTRIGGER)
+        if (key & SCE_CTRL_LTRIGGER)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[8];
@@ -629,7 +629,7 @@ void I_GetEvent()
 	    }
 	}
 	else {
-        if (ctl.buttons & PSP2_CTRL_LTRIGGER)
+        if (ctl.buttons & SCE_CTRL_LTRIGGER)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[8];
@@ -644,7 +644,7 @@ void I_GetEvent()
 	}
 	if (d_controls[9] == KEY_ENTER || d_controls[9] == KEY_ESCAPE ||
 	    d_controls[9] == ' ' || d_controls[9] == KEY_TAB) {
-        if (key & PSP2_CTRL_RTRIGGER)
+        if (key & SCE_CTRL_RTRIGGER)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[9];
@@ -658,7 +658,7 @@ void I_GetEvent()
 	    }
 	}
 	else {
-        if (ctl.buttons & PSP2_CTRL_RTRIGGER)
+        if (ctl.buttons & SCE_CTRL_RTRIGGER)
 	    {
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[9];
@@ -673,7 +673,7 @@ void I_GetEvent()
 	}
 	if (d_controls[6] == KEY_ENTER || d_controls[6] == KEY_ESCAPE ||
 	    d_controls[6] == ' ' || d_controls[6] == KEY_TAB) {
-	    if(key & PSP2_CTRL_SQUARE){
+	    if(key & SCE_CTRL_SQUARE){
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[6];
 	    D_PostEvent(&kbevent);
@@ -686,7 +686,7 @@ void I_GetEvent()
 	    }
 	}
 	else {
-	    if(ctl.buttons & PSP2_CTRL_SQUARE){
+	    if(ctl.buttons & SCE_CTRL_SQUARE){
 	    kbevent.type = ev_keydown;
 	    kbevent.data1 = d_controls[6];
 	    D_PostEvent(&kbevent);
@@ -700,7 +700,7 @@ void I_GetEvent()
 	}
 	if (d_controls[7] == KEY_ENTER || d_controls[7] == KEY_ESCAPE ||
 	    d_controls[7] == ' ' || d_controls[7] == KEY_TAB) {
-	    if(key & PSP2_CTRL_CIRCLE) {
+	    if(key & SCE_CTRL_CIRCLE) {
 	        kbevent.type = ev_keydown;
 		kbevent.data1 = d_controls[7];
 		D_PostEvent(&kbevent);
@@ -713,7 +713,7 @@ void I_GetEvent()
 	    }
 	}
 	else {
-	    if(ctl.buttons & PSP2_CTRL_CIRCLE) {
+	    if(ctl.buttons & SCE_CTRL_CIRCLE) {
 	        kbevent.type = ev_keydown;
 		kbevent.data1 = d_controls[7];
 		D_PostEvent(&kbevent);
@@ -816,20 +816,20 @@ void NewPrompter() {
 	    }
 	    
 	   
-	    if (new_pad & PSP2_CTRL_UP) {
+	    if (new_pad & SCE_CTRL_UP) {
 		if (d_clist_curpos > 0) {
 			d_clist_curpos--;
 			if (d_clist_curpos < d_clist_start) { d_clist_start = d_clist_curpos; }
 		}
 	    }
-	    else if (new_pad & PSP2_CTRL_DOWN) {
+	    else if (new_pad & SCE_CTRL_DOWN) {
 		if (d_clist_curpos < (MAX_CONTROL-1)) {
 			d_clist_curpos++;
 			if (d_clist_curpos >= (d_clist_start+MAX_CONTROL-1)) { d_clist_start++; }
 		}
 	    }
 	
-	    else if (new_pad & PSP2_CTRL_CIRCLE) {
+	    else if (new_pad & SCE_CTRL_CIRCLE) {
 	    if (d_clist_curpos != 10) {
 	        ButtonChange(tempstring, buttons, tempkeystring);
 	    }
@@ -838,16 +838,16 @@ void NewPrompter() {
 	    }
 	    }
 	
-	    else if (new_pad & PSP2_CTRL_TRIANGLE) {
+	    else if (new_pad & SCE_CTRL_TRIANGLE) {
 	    SaveToFile(tempstring, buttons, tempkeystring);
 	    }
 	    
-	    else if (new_pad & PSP2_CTRL_SQUARE) {
+	    else if (new_pad & SCE_CTRL_SQUARE) {
 	    if (d_clist_curpos == 10)
 	        change_cpu_clock(0); // decrement
 	    }
 	    
-	    else if (new_pad & PSP2_CTRL_CROSS) {
+	    else if (new_pad & SCE_CTRL_CROSS) {
 	    break;
 	    }
 	}
@@ -964,42 +964,42 @@ void ButtonChange(char tempstring[][MAX_TEMP_STRING], const char* buttons[], con
 	        analog = 0;
 	    }
 	}
-	else if (key & PSP2_CTRL_START) {
+	else if (key & SCE_CTRL_START) {
 	    tempact = d_controls[1];
 	    d_controls[1] = d_controls[d_clist_curpos];
 	    d_controls[d_clist_curpos] = tempact;
 	}
-	else if (key & PSP2_CTRL_SELECT) {
+	else if (key & SCE_CTRL_SELECT) {
 	    tempact = d_controls[2];
 	    d_controls[2] = d_controls[d_clist_curpos];
 	    d_controls[d_clist_curpos] = tempact;
 	}
-	else if (key & PSP2_CTRL_CROSS) {
+	else if (key & SCE_CTRL_CROSS) {
 	    tempact = d_controls[3];
 	    d_controls[3] = d_controls[d_clist_curpos];
 	    d_controls[d_clist_curpos] = tempact;
 	}
-	else if (key & PSP2_CTRL_TRIANGLE) {
+	else if (key & SCE_CTRL_TRIANGLE) {
 	    tempact = d_controls[5];
 	    d_controls[5] = d_controls[d_clist_curpos];
 	    d_controls[d_clist_curpos] = tempact;
 	}
-	else if (key & PSP2_CTRL_SQUARE) {
+	else if (key & SCE_CTRL_SQUARE) {
 	    tempact = d_controls[6];
 	    d_controls[6] = d_controls[d_clist_curpos];
 	    d_controls[d_clist_curpos] = tempact;
 	}
-	else if (key & PSP2_CTRL_CIRCLE) {
+	else if (key & SCE_CTRL_CIRCLE) {
 	    tempact = d_controls[7];
 	    d_controls[7] = d_controls[d_clist_curpos];
 	    d_controls[d_clist_curpos] = tempact;
 	}
-    else if (key & PSP2_CTRL_LTRIGGER) {
+    else if (key & SCE_CTRL_LTRIGGER) {
 	    tempact = d_controls[8];
 	    d_controls[8] = d_controls[d_clist_curpos];
 	    d_controls[d_clist_curpos] = tempact;
 	}
-    else if (key & PSP2_CTRL_RTRIGGER) {
+    else if (key & SCE_CTRL_RTRIGGER) {
 	    tempact = d_controls[9];
 	    d_controls[9] = d_controls[d_clist_curpos];
 	    d_controls[d_clist_curpos] = tempact;
@@ -1037,7 +1037,7 @@ void SaveToFile(char tempstring[][MAX_TEMP_STRING], const char* buttons[], const
 	    sprintf(tempstring[i], "%s = %s", buttons[i],tempkeystring[die]);
 	}
 	sprintf(config_file, "%sconfig.ini", doomwaddir);
-	file = sceIoOpen(config_file, PSP2_O_CREAT|PSP2_O_WRONLY|PSP2_O_TRUNC, 0777);
+	file = sceIoOpen(config_file, SCE_O_CREAT|SCE_O_WRONLY|SCE_O_TRUNC, 0777);
 
 	for (i=0;i<MAX_CONTROL;i++) {
 	    

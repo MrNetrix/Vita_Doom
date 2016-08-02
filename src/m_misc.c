@@ -116,7 +116,7 @@ M_WriteFile
     FILE       *handle;
     int		count;
 
-    SceUID file = sceIoOpen(name, PSP2_O_CREAT | PSP2_O_WRONLY, 0777);
+    SceUID file = sceIoOpen(name, SCE_O_CREAT | SCE_O_WRONLY, 0777);
     if (file == NULL)
     {
         return;
@@ -146,7 +146,7 @@ M_ReadFile
     byte	*buf;
     byte tempbuffer[0xFFFF];
 
-    SceUID file = sceIoOpen(name, PSP2_O_RDONLY, 0777);
+    SceUID file = sceIoOpen(name, SCE_O_RDONLY, 0777);
     if (file <= 0)
     {
         printf("M_ReadFile sceIoOpen error: (0x%x) File: %s\n", file, name);

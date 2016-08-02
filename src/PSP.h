@@ -91,7 +91,7 @@ void mh_print(int x, int y, unsigned char *str, uint32_t col, int backcol, int f
 void pgInit();
 void pgScreenFrame(long mode,long frame);
 
-#define PSP2_DIR(path) "cache0:/VitaDefilerClient/" path
+#define PSP2_DIR(path) "ux0:data/" path
 
 #ifdef __cplusplus
 }

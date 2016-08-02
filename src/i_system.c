@@ -149,7 +149,7 @@ void I_Quit (void)
     debugNetFinish();
 #endif
 
-    uvl_exit(0);
+    // uvl_exit(0);
 }
 
 void I_WaitVBL(int count)
