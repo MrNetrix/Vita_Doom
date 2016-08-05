@@ -178,7 +178,7 @@ void PSP2_Video_DrawBuffer()
     vita2d_start_drawing();
     vita2d_clear_screen();
 
-    vita2d_draw_texture_scale(pal_tex, 150, 75, 2, 2);
+	vita2d_draw_texture_scale(pal_tex, 0, 0, SCREEN_W/(float)SCREENWIDTH, SCREEN_H/(float)SCREENHEIGHT);
     vita2d_draw_texture(font_tex, 0, 0);
 
     vita2d_end_drawing();
