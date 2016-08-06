@@ -1,33 +1,51 @@
-TITLE = Vita_Doom
+PROJECT = Vita_Doom
+PROJECT_TITLE := VitaDoom
+PROJECT_TITLEID := FFFF00666
+
 HOMEBREW_C_SRCS := $(wildcard src/*.c)
 HOMEBREW_CPP_SRCS := $(wildcard src/*.cpp)
 HOMEBREW_OBJS = $(patsubst src/%,bin/%,$(HOMEBREW_C_SRCS:.c=.o)) $(patsubst src/%,bin/%,$(HOMEBREW_CPP_SRCS:.cpp=.o))
+OBJ_DIRS := $(addprefix out/, $(dir $(SRC_C:src/%.c=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/%.cpp=%.o)))
 
 PREFIX = arm-vita-eabi
 CC = $(PREFIX)-gcc
 CCP = $(PREFIX)-g++
+STRIP := $(PREFIX)-strip
 CFLAGS = -Wall -fno-exceptions -Ofast -DPSP2 -mcpu=cortex-a9 -mthumb -mfpu=neon
 CPPFLAGS = $(CFLAGS)
 
-all: $(TITLE)
+all: package
 
-TEST_OUTPUT = bin/*.S out/$(TITLE).elf out/$(TITLE).velf bin/*.o lib/*.a lib/*.o lib/*.S # lib/Makefile
-LIBS = -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub -lScePower_stub -lSceSysmodule_stub -lSceCommonDialog_stub
+package: $(PROJECT).vpk
 
-debug: CFLAGS += -DDEBUG
+$(PROJECT).vpk: eboot.bin param.sfo
+	vita-pack-vpk -s out/param.sfo -b out/eboot.bin \
+		--add sce_sys/icon0.png=sce_sys/icon0.png \
+		--add sce_sys/livearea/contents/bg.png=sce_sys/livearea/contents/bg.png \
+		--add sce_sys/livearea/contents/startup.png=sce_sys/livearea/contents/startup.png \
+		--add sce_sys/livearea/contents/template.xml=sce_sys/livearea/contents/template.xml \
+	out/$(PROJECT).vpk
+
+TEST_OUTPUT = bin/*.S out/$(PROJECT).elf out/$(PROJECT).velf bin/*.o lib/*.a lib/*.o lib/*.S # lib/Makefile
+LIBS = -lvita2d -lm -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub -lScePower_stub -lSceSysmodule_stub -lSceCommonDialog_stub
 
 debugnet: CFLAGS += -DUSE_DEBUGNET
 debugnet: LIBS := -ldebugnet -lSceNet_stub -lSceNetCtl_stub $(LIBS)
 debugnet: all
 
-.PHONY: $(TITLE)
-$(TITLE): out/$(TITLE).elf
-	vita-elf-create out/$(TITLE).elf out/$(TITLE).velf
-	vita-make-fself out/$(TITLE).velf out/eboot.bin
+eboot.bin: out/$(PROJECT).velf
+	vita-make-fself out/$(PROJECT).velf out/eboot.bin
 
-out/$(TITLE).elf: $(HOMEBREW_OBJS)
+param.sfo:
+	vita-mksfoex -s TITLE_ID="$(PROJECT_TITLEID)" "$(PROJECT_TITLE)" out/param.sfo
+	
+out/$(PROJECT).velf: out/$(PROJECT).elf
+	$(STRIP) -g $<
+	vita-elf-create $< $@
+
+out/$(PROJECT).elf: $(HOMEBREW_OBJS)
 	mkdir -p out
-	$(CC) -Wl,-q $(LDFLAGS) $(HOMEBREW_OBJS) -lvita2d -lm $(LIBS) -o $@
+	$(CC) -Wl,-q $(LDFLAGS) $(HOMEBREW_OBJS) $(LIBS) -o $@
 
 bin/%.o: src/%.c
 	mkdir -p bin
@@ -38,7 +56,11 @@ bin/%.o: src/%.cpp
 	$(CCP) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(ALL_OBJS:.o=.d) $(TARGETS) $(TEST_OUTPUT)
+	rm -f $(PROJECT).velf $(PROJECT).elf $(PROJECT).vpk param.sfo eboot.bin $(ALL_OBJS:.o=.d) $(TARGETS) $(TEST_OUTPUT)
+	rm -r bin out $(abspath $(OBJ_DIRS))
 
+rebuilddebugnet: clean
+rebuilddebugnet: debugnet
+	
 rebuild: clean
 rebuild: all
