@@ -8,8 +8,6 @@ extern "C" {
 #define    LINESIZE        512
 #define    PIXELSIZE       1
 #define FRAMESIZE                          0x44000
-#define SCREEN_WIDTH  480
-#define SCREEN_HEIGHT 272
 
 #include <psp2/types.h>
 #include <psp2/ctrl.h>
