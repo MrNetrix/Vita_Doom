@@ -70,6 +70,11 @@ uint32_t *palette_data, *font_data;
 
 int palette_length = 256;
 
+float screen_x;
+float screen_y;
+float screen_scale_w;
+float screen_scale_h;
+
 void draw_pixel(uint32_t x, uint32_t y, uint32_t color)
 {
     font_data[x + y * SCREEN_W] = color;
@@ -146,7 +151,7 @@ void ScreenFlash(uint32_t color)
     sceKernelDelayThread(1000 * 100);
 }
 
-void PSP2_Video_Init()
+void PSP2_Video_Init(int screen_scale)
 {
     vita2d_init();
 
@@ -154,6 +159,31 @@ void PSP2_Video_Init()
     //ScreenFlash(RGBA8(0, 255, 0, 255));
     //ScreenFlash(RGBA8(0, 0, 255, 255));
     //ScreenFlash(RGBA8(0, 0, 0, 255));
+
+    //Setup screen scale
+    switch (screen_scale)
+    {
+        case SCREEN_SCALE_NONE:
+            break;
+        case SCREEN_SCALE_FIT:
+            screen_x = 150;
+            screen_y = 0;
+            screen_scale_w = 2;
+            screen_scale_h = SCREEN_H/(float)SCREENHEIGHT;
+            break;
+        case SCREEN_SCALE_ORIG:
+            screen_x = 150;
+            screen_y = 75;
+            screen_scale_w = 2;
+            screen_scale_h = 2;
+            break;
+        case SCREEN_SCALE_FULL:
+            screen_x = 0;
+            screen_y = 0;
+            screen_scale_w = SCREEN_W/(float)SCREENWIDTH;
+            screen_scale_h = SCREEN_H/(float)SCREENHEIGHT;
+            break;
+    }
 
     font_tex = vita2d_create_empty_texture(SCREEN_W, SCREEN_H);
     font_data = (uint32_t*) vita2d_texture_get_datap(font_tex);
@@ -178,7 +208,7 @@ void PSP2_Video_DrawBuffer()
     vita2d_start_drawing();
     vita2d_clear_screen();
 
-    vita2d_draw_texture_scale(pal_tex, 150, 75, 2, 2);
+    vita2d_draw_texture_scale(pal_tex, screen_x, screen_y, screen_scale_w, screen_scale_h);
     vita2d_draw_texture(font_tex, 0, 0);
 
     vita2d_end_drawing();

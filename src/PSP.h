@@ -30,6 +30,11 @@ extern "C" {
 #define SCREEN_W 960
 #define SCREEN_H 544
 
+#define SCREEN_SCALE_NONE   0
+#define SCREEN_SCALE_FULL   1
+#define SCREEN_SCALE_FIT    2
+#define SCREEN_SCALE_ORIG   3
+
 #define RED   RGBA8(255,0,0,255)
 #define GREEN RGBA8(0,255,0,255)
 #define BLUE  RGBA8(0,0,255,255)
@@ -38,7 +43,7 @@ extern "C" {
 
 //#define sceCtrlPeekBufferPositive sceCtrlReadBufferPositive
 
-void PSP2_Video_Init();
+void PSP2_Video_Init(int scr_scale);
 void PSP2_Video_FillScreen();
 void PSP2_Video_DrawBuffer();
 
@@ -90,6 +95,7 @@ void Draw_Char_Zenkaku(int x,int y,unsigned char u,unsigned char d,int col,int b
 void mh_print(int x, int y, unsigned char *str, uint32_t col, int backcol, int fill);
 void pgInit();
 void pgScreenFrame(long mode,long frame);
+void Change_Resolution();
 
 #define PSP2_DIR(path) "ux0:data/" path
 

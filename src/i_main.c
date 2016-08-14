@@ -56,6 +56,7 @@ SceCtrlData ctl;
 #define PATHLIST_H 20
 #define REPEAT_TIME 0x40000
 #define BUFSIZE		65536
+#define DEFAULT_SCREEN_SCALE	SCREEN_SCALE_FULL
 
 dirent_t		dlist[MAXDIRNUM];
 int				dlist_num;
@@ -68,6 +69,7 @@ int				cbuf_start[MAXDEPTH];
 int				cbuf_curpos[MAXDEPTH];
 int				now_depth;
 char			buf[BUFSIZE];
+int				screen_res;
 
 int debug_res = 0x0;
 
@@ -112,7 +114,8 @@ int main(int argc, char** argv)
  //   }
 
 	//SetupCallbacks();
-        pgInit();
+        screen_res = DEFAULT_SCREEN_SCALE;
+        pgInit(screen_res);
         pgScreenFrame(2,0);
         pgFillvram(0);
 
@@ -143,9 +146,9 @@ switch(Control()) {
 
 }
 
-void pgInit()
+void pgInit(int scale)
 {
-    PSP2_Video_Init();
+    PSP2_Video_Init(scale);
 
 	//sceDisplaySetMode(0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	pgScreenFrame(0,0);
@@ -345,6 +348,20 @@ void Draw_All(void) {
 
     mh_print(10, 300, errtext, RGBA8(255, 0, 0, 2555), 0, 0);*/
 
+    //Display Screen Resolution
+    switch (screen_res)
+    {
+        case SCREEN_SCALE_FULL:
+            mh_print(0, 500, "Screen Resolution (press select to change): Fullscreen", rgb2col(255, 255, 0), 0, 0);
+            break;
+        case SCREEN_SCALE_FIT:
+            mh_print(0, 500, "Screen Resolution (press select to change): Fit to Screen", rgb2col(255, 255, 0), 0, 0);
+            break;
+        case SCREEN_SCALE_ORIG:
+            mh_print(0, 500, "Screen Resolution (press select to change): Original", rgb2col(255, 255, 0), 0, 0);
+            break;
+    }
+
     if (dlist_num == 0)
     {
         mh_print(32, 40, "No WADs found... Put WADs in:", rgb2col(255, 0, 0), 0, 0);
@@ -483,6 +500,9 @@ int Control(void) {
 			return 1;
 		}
 	}
+	if (new_pad & SCE_CTRL_SELECT) {
+		Change_Resolution();
+	}
 	
 	return 0;
 }
@@ -490,4 +510,21 @@ int Control(void) {
 void pgWaitV()
 {
     sceDisplayWaitVblankStart();
+}
+
+void Change_Resolution()
+{
+	switch(screen_res)
+	{
+		case SCREEN_SCALE_FULL:
+			screen_res = SCREEN_SCALE_FIT;
+			break;
+		case SCREEN_SCALE_FIT:
+			screen_res = SCREEN_SCALE_ORIG;
+			break;
+		case SCREEN_SCALE_ORIG:
+			screen_res = SCREEN_SCALE_FULL;
+			break;
+	}
+	pgInit(screen_res);
 }
