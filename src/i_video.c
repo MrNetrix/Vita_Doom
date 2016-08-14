@@ -1225,7 +1225,7 @@ void I_InitGraphics(void)
     video_h = h = 200;
     video_bpp = 8;
 
-    PSP2_Video_Init();
+    PSP2_Video_Init(SCREEN_SCALE_NONE);
 
     screens[0] = PSP2_Video_GetVideoPtr();  //(unsigned char *) malloc(SCREENWIDTH * SCREENHEIGHT);
 
