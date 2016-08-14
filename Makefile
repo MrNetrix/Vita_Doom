@@ -5,7 +5,6 @@ PROJECT_TITLEID := DOOM00666
 HOMEBREW_C_SRCS := $(wildcard src/*.c)
 HOMEBREW_CPP_SRCS := $(wildcard src/*.cpp)
 HOMEBREW_OBJS = $(patsubst src/%,bin/%,$(HOMEBREW_C_SRCS:.c=.o)) $(patsubst src/%,bin/%,$(HOMEBREW_CPP_SRCS:.cpp=.o))
-OBJ_DIRS := $(addprefix out/, $(dir $(SRC_C:src/%.c=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/%.cpp=%.o)))
 
 PREFIX = arm-vita-eabi
 CC = $(PREFIX)-gcc
@@ -57,7 +56,7 @@ bin/%.o: src/%.cpp
 
 clean:
 	rm -f $(PROJECT).velf $(PROJECT).elf $(PROJECT).vpk param.sfo eboot.bin $(ALL_OBJS:.o=.d) $(TARGETS) $(TEST_OUTPUT)
-	rm -r bin out $(abspath $(OBJ_DIRS))
+	rm -rf bin out
 
 rebuilddebugnet: clean
 rebuilddebugnet: debugnet
