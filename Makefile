@@ -10,7 +10,7 @@ PREFIX = arm-vita-eabi
 CC = $(PREFIX)-gcc
 CCP = $(PREFIX)-g++
 STRIP := $(PREFIX)-strip
-CFLAGS = -Wall -fno-exceptions -Ofast -DPSP2 -mcpu=cortex-a9 -mthumb -mfpu=neon
+CFLAGS = -Wall -fno-exceptions -DPSP2 -mcpu=cortex-a9 -mthumb -mfpu=neon
 CPPFLAGS = $(CFLAGS)
 
 all: package
@@ -26,20 +26,20 @@ $(PROJECT).vpk: eboot.bin param.sfo
 	out/$(PROJECT).vpk
 
 TEST_OUTPUT = bin/*.S out/$(PROJECT).elf out/$(PROJECT).velf bin/*.o lib/*.a lib/*.o lib/*.S # lib/Makefile
-LIBS = -lvita2d -lm -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub -lScePower_stub -lSceSysmodule_stub -lSceCommonDialog_stub
+LIBS = -lvita2d -lm -lSceLibKernel_stub -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub -lScePower_stub -lSceSysmodule_stub -lSceCommonDialog_stub
 
-debugnet: CFLAGS += -DUSE_DEBUGNET
+debugnet: CFLAGS += -DUSE_DEBUGNET -g
 debugnet: LIBS := -ldebugnet -lSceNet_stub -lSceNetCtl_stub $(LIBS)
 debugnet: all
 
 eboot.bin: out/$(PROJECT).velf
-	vita-make-fself out/$(PROJECT).velf out/eboot.bin
+	vita-make-fself -s out/$(PROJECT).velf out/eboot.bin
 
 param.sfo:
 	vita-mksfoex -s TITLE_ID="$(PROJECT_TITLEID)" "$(PROJECT_TITLE)" out/param.sfo
 	
 out/$(PROJECT).velf: out/$(PROJECT).elf
-	$(STRIP) -g $<
+	#$(STRIP) -g $<
 	vita-elf-create $< $@
 
 out/$(PROJECT).elf: $(HOMEBREW_OBJS)

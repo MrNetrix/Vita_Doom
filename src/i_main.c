@@ -37,14 +37,7 @@ long pg_screenmode;
 
 extern char *doomwaddir;
 char doomwaddir2[256];
-
-/* Define the module info section */
-PSP2_MODULE_INFO(0, 0, "Doom-PSP");
-
-/* Define the main thread's attribute value (optional) */
-//PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
  
-extern void _DisableFPUExceptions();
 extern void sound_callback(void *buf, unsigned int reqn);
 
 SceCtrlData ctl;
@@ -77,7 +70,7 @@ int main(int argc, char** argv)
 {
 #ifdef USE_DEBUGNET
     int ret = debugNetInit("255.255.255.255", 18194, DEBUG);
-    printf("debugNetInit: %d", ret);
+    printf("debugNetInit: %d\n", ret);
 #endif
 
     printf("DOOM started\n");
@@ -101,9 +94,6 @@ int main(int argc, char** argv)
 
 	//pspAudioInit();
 	//pspAudioSetChannelCallback(0, (void *)&sound_callback);
-
-	//_DisableFPUExceptions();
-//	pspDebugScreenInit();
 
 	//sceCtrlSetSamplingCycle(0);
 
