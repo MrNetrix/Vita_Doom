@@ -536,6 +536,6 @@ void Vita_Audio_Thread() {
 void Vita_Audio_Init()
 {
 	SceUID thid;
-	thid = sceKernelCreateThread("audio_thread", &Vita_Audio_Thread, 0x10000100, SCE_AUDIO_MAX_LEN*32, 0, 0, NULL);
+	thid = sceKernelCreateThread("audio_thread", &Vita_Audio_Thread, 0x10000100, SCE_AUDIO_MAX_LEN*4, 0, 0, NULL);
 	sceKernelStartThread(thid, 0, NULL);
 }
