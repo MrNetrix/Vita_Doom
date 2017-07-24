@@ -26,6 +26,8 @@ rcsid[] = "$Id: i_main.c,v 1.4 1997/02/03 22:45:10 b1 Exp $";
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <psp2/kernel/threadmgr.h>
+#include <psp2/audioout.h>
 #include "doomdef.h"
 
 #include "m_argv.h"
@@ -92,8 +94,7 @@ int main(int argc, char** argv)
 
     printf("WAD folder: %s\n", doomwaddir2);
 
-	//pspAudioInit();
-	//pspAudioSetChannelCallback(0, (void *)&sound_callback);
+	Vita_Audio_Init();
 
 	//sceCtrlSetSamplingCycle(0);
 
@@ -517,4 +518,24 @@ void Change_Resolution()
 			break;
 	}
 	pgInit(screen_res);
+}
+
+void Vita_Audio_Thread() {
+	int size = 256;
+	int freq = 48000;
+	int mode = SCE_AUDIO_OUT_MODE_STEREO;
+	int port = sceAudioOutOpenPort(SCE_AUDIO_OUT_PORT_TYPE_BGM, size, freq, mode);
+	void* wave_buf[SCE_AUDIO_MAX_LEN]={0};
+
+	while (true) {
+		sound_callback(wave_buf, size);
+		sceAudioOutOutput(port, wave_buf);
+	}
+}
+
+void Vita_Audio_Init()
+{
+	SceUID thid;
+	thid = sceKernelCreateThread("audio_thread", &Vita_Audio_Thread, 0x10000100, SCE_AUDIO_MAX_LEN*32, 0, 0, NULL);
+	sceKernelStartThread(thid, 0, NULL);
 }

@@ -26,7 +26,7 @@ $(PROJECT).vpk: eboot.bin param.sfo
 	out/$(PROJECT).vpk
 
 TEST_OUTPUT = bin/*.S out/$(PROJECT).elf out/$(PROJECT).velf bin/*.o lib/*.a lib/*.o lib/*.S # lib/Makefile
-LIBS = -lvita2d -lm -lSceLibKernel_stub -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub -lScePower_stub -lSceSysmodule_stub -lSceCommonDialog_stub
+LIBS = -lvita2d -lm -lSceLibKernel_stub -lSceTouch_stub -lSceDisplay_stub -lSceGxm_stub -lSceCtrl_stub -lSceRtc_stub -lScePower_stub -lSceSysmodule_stub -lSceCommonDialog_stub -lSceAudio_stub
 
 debugnet: CFLAGS += -DUSE_DEBUGNET -g
 debugnet: LIBS := -ldebugnet -lSceNet_stub -lSceNetCtl_stub $(LIBS)
