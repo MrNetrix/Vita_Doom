@@ -515,7 +515,7 @@ void I_GetEvent()
 		}
 
 		if (!analog) {
-		if (ctl.ly <= 0x10)
+		if (ctl.ry <= 0x10)
 		{
             looped = false;
 
@@ -551,7 +551,7 @@ void I_GetEvent()
 			kbevent.data1 = KEY_1 + num;
 			D_PostEvent(&kbevent);
 		}
-		if (ctl.ly >= 0xD0)
+		if (ctl.ry >= 0xD0)
 		{
             looped = false;
 
