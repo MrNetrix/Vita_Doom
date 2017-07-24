@@ -63,6 +63,7 @@ int				cbuf_curpos[MAXDEPTH];
 int				now_depth;
 char			buf[BUFSIZE];
 int				screen_res;
+boolean			analog_enabled;
 
 int debug_res = 0x0;
 
@@ -98,6 +99,7 @@ int main(int argc, char** argv)
 	//sceCtrlSetSamplingCycle(0);
 
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
+	analog_enabled = 0;
 
 	//SetupCallbacks();
         screen_res = DEFAULT_SCREEN_SCALE;
@@ -348,6 +350,16 @@ void Draw_All(void) {
             break;
     }
 
+    // Controller mode
+    if (analog_enabled)
+    {
+        mh_print(0, 450, "Controller Mode (press triangle to change): Analog Stick", rgb2col(255, 255, 0), 0, 0);
+    }
+    else
+    {
+        mh_print(0, 450, "Controller Mode (press triangle to change): D-Pad", rgb2col(255, 255, 0), 0, 0);
+    }
+
     if (dlist_num == 0)
     {
         mh_print(32, 40, "No WADs found... Put WADs in:", rgb2col(255, 0, 0), 0, 0);
@@ -489,6 +501,9 @@ int Control(void) {
 	if (new_pad & SCE_CTRL_SELECT) {
 		Change_Resolution();
 	}
+	if (new_pad & SCE_CTRL_TRIANGLE) {
+		Change_Controller_Mode();
+	}
 	
 	return 0;
 }
@@ -513,4 +528,14 @@ void Change_Resolution()
 			break;
 	}
 	pgInit(screen_res);
+}
+
+void Change_Controller_Mode()
+{
+	if (analog_enabled) {
+		analog_enabled = 0;
+	} else {
+		analog_enabled = 1;
+	}
+	I_SetControlMode(analog_enabled);
 }
