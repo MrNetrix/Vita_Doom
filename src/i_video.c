@@ -1280,3 +1280,7 @@ void I_FinishUpdate2 () {
 
 	//sceGuDisplay(GU_TRUE);
 }
+
+void I_SetControlMode(boolean isAnalog) {
+	analog = isAnalog;
+}
