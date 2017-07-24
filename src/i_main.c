@@ -97,11 +97,7 @@ int main(int argc, char** argv)
 
 	//sceCtrlSetSamplingCycle(0);
 
-	//int result = sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
- //   if (result < 0)
- //   {
- //       printf("sceCtrlSetSamplingMode : 0x%x", result);
- //   }
+	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
 
 	//SetupCallbacks();
         screen_res = DEFAULT_SCREEN_SCALE;
