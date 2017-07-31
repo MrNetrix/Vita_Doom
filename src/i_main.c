@@ -26,6 +26,8 @@ rcsid[] = "$Id: i_main.c,v 1.4 1997/02/03 22:45:10 b1 Exp $";
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <psp2/kernel/threadmgr.h>
+#include <psp2/audioout.h>
 #include "doomdef.h"
 
 #include "m_argv.h"
@@ -63,6 +65,7 @@ int				cbuf_curpos[MAXDEPTH];
 int				now_depth;
 char			buf[BUFSIZE];
 int				screen_res;
+boolean			analog_enabled;
 
 int debug_res = 0x0;
 
@@ -92,16 +95,12 @@ int main(int argc, char** argv)
 
     printf("WAD folder: %s\n", doomwaddir2);
 
-	//pspAudioInit();
-	//pspAudioSetChannelCallback(0, (void *)&sound_callback);
+	Vita_Audio_Init();
 
 	//sceCtrlSetSamplingCycle(0);
 
-	//int result = sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
- //   if (result < 0)
- //   {
- //       printf("sceCtrlSetSamplingMode : 0x%x", result);
- //   }
+	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
+	analog_enabled = 0;
 
 	//SetupCallbacks();
         screen_res = DEFAULT_SCREEN_SCALE;
@@ -352,6 +351,16 @@ void Draw_All(void) {
             break;
     }
 
+    // Controller mode
+    if (analog_enabled)
+    {
+        mh_print(0, 450, "Controller Mode (press triangle to change): Analog Stick", rgb2col(255, 255, 0), 0, 0);
+    }
+    else
+    {
+        mh_print(0, 450, "Controller Mode (press triangle to change): D-Pad", rgb2col(255, 255, 0), 0, 0);
+    }
+
     if (dlist_num == 0)
     {
         mh_print(32, 40, "No WADs found... Put WADs in:", rgb2col(255, 0, 0), 0, 0);
@@ -493,6 +502,9 @@ int Control(void) {
 	if (new_pad & SCE_CTRL_SELECT) {
 		Change_Resolution();
 	}
+	if (new_pad & SCE_CTRL_TRIANGLE) {
+		Change_Controller_Mode();
+	}
 	
 	return 0;
 }
@@ -517,4 +529,34 @@ void Change_Resolution()
 			break;
 	}
 	pgInit(screen_res);
+}
+
+void Change_Controller_Mode()
+{
+	if (analog_enabled) {
+		analog_enabled = 0;
+	} else {
+		analog_enabled = 1;
+	}
+	I_SetControlMode(analog_enabled);
+}
+
+void Vita_Audio_Thread() {
+	int size = 256;
+	int freq = 48000;
+	int mode = SCE_AUDIO_OUT_MODE_STEREO;
+	int port = sceAudioOutOpenPort(SCE_AUDIO_OUT_PORT_TYPE_BGM, size, freq, mode);
+	void* wave_buf[SCE_AUDIO_MAX_LEN]={0};
+
+	while (true) {
+		sound_callback(wave_buf, size);
+		sceAudioOutOutput(port, wave_buf);
+	}
+}
+
+void Vita_Audio_Init()
+{
+	SceUID thid;
+	thid = sceKernelCreateThread("audio_thread", &Vita_Audio_Thread, 0x10000100, SCE_AUDIO_MAX_LEN*4, 0, 0, NULL);
+	sceKernelStartThread(thid, 0, NULL);
 }

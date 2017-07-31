@@ -434,8 +434,6 @@ void I_GetEvent()
 
 	if (gamestate == GS_LEVEL)
 	{
-        boolean looped = false;
-
 		plyrweap = &players[consoleplayer];
 
 		num = plyrweap->readyweapon;
@@ -445,21 +443,12 @@ void I_GetEvent()
 		
 		if (key & SCE_CTRL_UP)
 		{
-            looped = false;
-
 			while (1)
             {
 				++num;
                 if (num > wp_supershotgun)
                 {
-                    if (looped)
-                    {
-                        num = plyrweap->readyweapon;
-                        break;
-                    }
-
                     num = wp_fist;
-                    looped = true;
                 }
 
 				if (plyrweap->weaponowned[num])
@@ -470,10 +459,6 @@ void I_GetEvent()
 
 				
 			}
-
-		kbevent.type = ev_keydown;
-		kbevent.data1 = KEY_1 + num;
-		D_PostEvent(&kbevent);
 		}
 		else  
 		{
@@ -485,21 +470,12 @@ void I_GetEvent()
 		
 		if (key & SCE_CTRL_DOWN)
         {
-            looped = false;
-
 			while (1)
             {
 				--num;
                 if (num == -1)
                 {
-                    if (looped)
-                    {
-                        num = plyrweap->readyweapon;
-                        break;
-                    }
-
                     num = wp_supershotgun;
-                    looped = true;
                 }
 				if (plyrweap->weaponowned[num])
 				{
@@ -507,31 +483,18 @@ void I_GetEvent()
 					break;
 				}
 			}
-
-			kbevent.type = ev_keydown;
-			kbevent.data1 = KEY_1 + num;
-			D_PostEvent(&kbevent);
 		}
 		}
 
 		if (!analog) {
-		if (ctl.ly <= 0x10)
+		if (ctl.ry <= 0x10)
 		{
-            looped = false;
-
 			while (1)
             {
 				++num;
 				if (num > wp_supershotgun)
                 {
-                    if (looped)
-                    {
-                        num = plyrweap->readyweapon;
-                        break;
-                    }
-
                     num = wp_fist;
-                    looped = true;
                 }
 
 				if (plyrweap->weaponowned[num])
@@ -540,10 +503,6 @@ void I_GetEvent()
 					break;
 				}
 			}
-
-			kbevent.type = ev_keydown;
-			kbevent.data1 = KEY_1 + num;
-			D_PostEvent(&kbevent);
 		}
 		else  
         {
@@ -551,23 +510,14 @@ void I_GetEvent()
 			kbevent.data1 = KEY_1 + num;
 			D_PostEvent(&kbevent);
 		}
-		if (ctl.ly >= 0xD0)
+		if (ctl.ry >= 0xD0)
 		{
-            looped = false;
-
 			while (1)
             {
                 --num;
                 if (num == -1)
                 {
-                    if (looped)
-                    {
-                        num = plyrweap->readyweapon;
-                        break;
-                    }
-
                     num = wp_supershotgun;
-                    looped = true;
                 }
 
 				if (plyrweap->weaponowned[num])
@@ -576,10 +526,6 @@ void I_GetEvent()
 					break;
 				}
 			}
-
-			kbevent.type = ev_keydown;
-			kbevent.data1 = KEY_1 + num;
-			D_PostEvent(&kbevent);
 		}
         }
     }
@@ -1279,4 +1225,8 @@ void I_FinishUpdate2 () {
 	//pspDebugScreenClear();
 
 	//sceGuDisplay(GU_TRUE);
+}
+
+void I_SetControlMode(boolean isAnalog) {
+	analog = isAnalog;
 }
