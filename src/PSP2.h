@@ -1,5 +1,5 @@
-#ifndef __PSP_H__
-#define __PSP_H__
+#ifndef __PSP2_H__
+#define __PSP2_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,8 +31,9 @@ extern "C" {
 
 #define SCREEN_SCALE_NONE   0
 #define SCREEN_SCALE_FULL   1
-#define SCREEN_SCALE_FIT    2
-#define SCREEN_SCALE_ORIG   3
+#define SCREEN_SCALE_FIT_4_TO_3    2
+#define SCREEN_SCALE_FIT_16_TO_10    3
+#define SCREEN_SCALE_ORIG   4
 
 #define RED   RGBA8(255,0,0,255)
 #define GREEN RGBA8(0,255,0,255)
@@ -42,8 +43,8 @@ extern "C" {
 
 //#define sceCtrlPeekBufferPositive sceCtrlReadBufferPositive
 
-void PSP2_Video_Init(int scr_scale);
-void PSP2_Video_FillScreen();
+void PSP2_Video_Init(int scr_scale, boolean bilinear_enabled);
+void PSP2_Video_FillScreen(uint32_t size);
 void PSP2_Video_DrawBuffer();
 
 void font_draw_char(int x, int y, uint32_t color, char c);
@@ -92,9 +93,11 @@ unsigned short num2elisa(unsigned short c);
 void Draw_Char_Hankaku(int x,int y,unsigned char ch,int col,int backcol,int fill);
 void Draw_Char_Zenkaku(int x,int y,unsigned char u,unsigned char d,int col,int backcol,int fill);
 void mh_print(int x, int y, unsigned char *str, uint32_t col, int backcol, int fill);
-void pgInit();
+void pgInit(int scale, boolean bilinear_enabled);
 void pgScreenFrame(long mode,long frame);
 void Change_Resolution();
+uint32_t* PSP2_GetPalettePtr();
+byte* PSP2_Video_GetVideoPtr();
 
 #define PSP2_DIR(path) "ux0:data/" path
 
