@@ -36,8 +36,7 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 
 #include "doomdef.h"
 
-#include "PSP.h"
-
+#include "PSP2.h"
 
 #define BUF_WIDTH (512)
 #define SCR_WIDTH (480)
@@ -54,6 +53,7 @@ int controls_set = 0;
 int d_clist_start = 0;
 int d_clist_curpos = 0;
 boolean analog = 0;
+extern bilinear_enabled;
 
 extern SceCtrlData ctl;
 
@@ -1171,7 +1171,7 @@ void I_InitGraphics(void)
     video_h = h = 200;
     video_bpp = 8;
 
-    PSP2_Video_Init(SCREEN_SCALE_NONE);
+    PSP2_Video_Init(SCREEN_SCALE_NONE, bilinear_enabled);
 
     screens[0] = PSP2_Video_GetVideoPtr();  //(unsigned char *) malloc(SCREENWIDTH * SCREENHEIGHT);
 

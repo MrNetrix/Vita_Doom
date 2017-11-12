@@ -86,7 +86,7 @@ static int access(char *file, int mode)
 
 #include "d_main.h"
 
-#include "PSP.h"
+#include "PSP2.h"
 
 #define MAXPATH   0x108
 char *doomwaddir;

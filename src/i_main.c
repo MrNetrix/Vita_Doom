@@ -32,7 +32,7 @@ rcsid[] = "$Id: i_main.c,v 1.4 1997/02/03 22:45:10 b1 Exp $";
 
 #include "m_argv.h"
 #include "d_main.h"
-#include "PSP.h"
+#include "PSP2.h"
 #include "fontb.h"
 
 long pg_screenmode;
@@ -51,7 +51,8 @@ SceCtrlData ctl;
 #define PATHLIST_H 20
 #define REPEAT_TIME 0x40000
 #define BUFSIZE		65536
-#define DEFAULT_SCREEN_SCALE	SCREEN_SCALE_FULL
+#define DEFAULT_SCREEN_SCALE	SCREEN_SCALE_FIT_4_TO_3
+#define DEFAULT_BILINEAR_ENABLED	true
 
 dirent_t		dlist[MAXDIRNUM];
 int				dlist_num;
@@ -66,6 +67,7 @@ int				now_depth;
 char			buf[BUFSIZE];
 int				screen_res;
 boolean			analog_enabled;
+boolean			bilinear_enabled;
 
 int debug_res = 0x0;
 
@@ -101,10 +103,12 @@ int main(int argc, char** argv)
 
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
 	analog_enabled = 0;
+	
+	bilinear_enabled = DEFAULT_BILINEAR_ENABLED;
 
 	//SetupCallbacks();
         screen_res = DEFAULT_SCREEN_SCALE;
-        pgInit(screen_res);
+        pgInit(screen_res, bilinear_enabled);
         pgScreenFrame(2,0);
         pgFillvram(0);
 
@@ -135,9 +139,9 @@ switch(Control()) {
 
 }
 
-void pgInit(int scale)
+void pgInit(int scale, boolean bilinear_enabled)
 {
-    PSP2_Video_Init(scale);
+    PSP2_Video_Init(scale, bilinear_enabled);
 
 	//sceDisplaySetMode(0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	pgScreenFrame(0,0);
@@ -341,24 +345,37 @@ void Draw_All(void) {
     switch (screen_res)
     {
         case SCREEN_SCALE_FULL:
-            mh_print(0, 500, "Screen Resolution (press select to change): Fullscreen", rgb2col(255, 255, 0), 0, 0);
+            mh_print(0, 450, "Screen Resolution (press select to change): Fullstretch", rgb2col(255, 255, 0), 0, 0);
             break;
-        case SCREEN_SCALE_FIT:
-            mh_print(0, 500, "Screen Resolution (press select to change): Fit to Screen", rgb2col(255, 255, 0), 0, 0);
+        case SCREEN_SCALE_FIT_4_TO_3:
+            mh_print(0, 450, "Screen Resolution (press select to change): Fit 4:3", rgb2col(255, 255, 0), 0, 0);
+            break;
+        case SCREEN_SCALE_FIT_16_TO_10:
+            mh_print(0, 450, "Screen Resolution (press select to change): Fit 16:10", rgb2col(255, 255, 0), 0, 0);
             break;
         case SCREEN_SCALE_ORIG:
-            mh_print(0, 500, "Screen Resolution (press select to change): Original", rgb2col(255, 255, 0), 0, 0);
+            mh_print(0, 450, "Screen Resolution (press select to change): Original", rgb2col(255, 255, 0), 0, 0);
             break;
+    }
+    
+    //Bilinear Filtering (Image Smoothing)
+    if (bilinear_enabled)
+    {
+            mh_print(0, 500, "Screen Filter (press start to change): Linear", rgb2col(255, 255, 0), 0, 0);
+    }
+    else
+    {
+            mh_print(0, 500, "Screen Filter (press start to change): Point", rgb2col(255, 255, 0), 0, 0);
     }
 
     // Controller mode
     if (analog_enabled)
     {
-        mh_print(0, 450, "Controller Mode (press triangle to change): Analog Stick", rgb2col(255, 255, 0), 0, 0);
+        mh_print(0, 400, "Controller Mode (press triangle to change): Analog Stick", rgb2col(255, 255, 0), 0, 0);
     }
     else
     {
-        mh_print(0, 450, "Controller Mode (press triangle to change): D-Pad", rgb2col(255, 255, 0), 0, 0);
+        mh_print(0, 400, "Controller Mode (press triangle to change): D-Pad", rgb2col(255, 255, 0), 0, 0);
     }
 
     if (dlist_num == 0)
@@ -505,6 +522,9 @@ int Control(void) {
 	if (new_pad & SCE_CTRL_TRIANGLE) {
 		Change_Controller_Mode();
 	}
+    if (new_pad & SCE_CTRL_START) {
+		Change_Filtering();
+	}
 	
 	return 0;
 }
@@ -519,16 +539,19 @@ void Change_Resolution()
 	switch(screen_res)
 	{
 		case SCREEN_SCALE_FULL:
-			screen_res = SCREEN_SCALE_FIT;
+			screen_res = SCREEN_SCALE_FIT_4_TO_3;
 			break;
-		case SCREEN_SCALE_FIT:
+		case SCREEN_SCALE_FIT_4_TO_3:
+			screen_res = SCREEN_SCALE_FIT_16_TO_10;
+			break;
+		case SCREEN_SCALE_FIT_16_TO_10:
 			screen_res = SCREEN_SCALE_ORIG;
 			break;
 		case SCREEN_SCALE_ORIG:
 			screen_res = SCREEN_SCALE_FULL;
 			break;
 	}
-	pgInit(screen_res);
+	pgInit(screen_res, bilinear_enabled);
 }
 
 void Change_Controller_Mode()
@@ -539,6 +562,16 @@ void Change_Controller_Mode()
 		analog_enabled = 1;
 	}
 	I_SetControlMode(analog_enabled);
+}
+
+void Change_Filtering()
+{
+	if (bilinear_enabled == true) {
+		bilinear_enabled = false;
+	} else {
+		bilinear_enabled = true;
+	}
+	pgInit(screen_res, bilinear_enabled);
 }
 
 void Vita_Audio_Thread() {

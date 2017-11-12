@@ -1,14 +1,12 @@
 
-
 #include <stdarg.h>
 
 #include <psp2/display.h>
 #include <psp2/gxm.h>
 #include <psp2/kernel/sysmem.h>
 
+#include "PSP2.h"
 #include <vita2d.h>
-
-#include "PSP.h"
 
 #include "doomdef.h"
 
@@ -64,7 +62,7 @@ const unsigned char msx_font[] __attribute((aligned(4))) =
 "\x70\x88\x80\x80\x88\x70\x20\x60\x90\x00\x00\x90\x90\x90\x68\x00";
 
 
-vita2d_texture *pal_tex, *font_tex;
+vita2d_texture *pal_tex = NULL, *font_tex = NULL;
 byte *paltex_data;
 uint32_t *palette_data, *font_data;
 
@@ -151,10 +149,8 @@ void ScreenFlash(uint32_t color)
     sceKernelDelayThread(1000 * 100);
 }
 
-void PSP2_Video_Init(int screen_scale)
+void PSP2_Video_Init(int screen_scale, boolean bilinear_enabled)
 {
-    vita2d_init();
-
     //ScreenFlash(RGBA8(255, 0, 0, 255));
     //ScreenFlash(RGBA8(0, 255, 0, 255));
     //ScreenFlash(RGBA8(0, 0, 255, 255));
@@ -165,11 +161,17 @@ void PSP2_Video_Init(int screen_scale)
     {
         case SCREEN_SCALE_NONE:
             break;
-        case SCREEN_SCALE_FIT:
-            screen_x = 150;
+        case SCREEN_SCALE_FIT_4_TO_3:
+            screen_scale_h = (float)SCREEN_H/(float)SCREENHEIGHT;
+            screen_scale_w = screen_scale_h*((float)SCREENHEIGHT/(float)SCREENWIDTH)*(4.0f/3.0f);
+            screen_x = ((float)SCREEN_W-screen_scale_w*(float)SCREENWIDTH)/2.0f;
             screen_y = 0;
-            screen_scale_w = 2;
-            screen_scale_h = SCREEN_H/(float)SCREENHEIGHT;
+            break;
+        case SCREEN_SCALE_FIT_16_TO_10:
+            screen_scale_h = (float)SCREEN_H/(float)SCREENHEIGHT;
+            screen_scale_w = screen_scale_h*((float)SCREENHEIGHT/(float)SCREENWIDTH)*(16.0f/10.0f);
+            screen_x = ((float)SCREEN_W-screen_scale_w*(float)SCREENWIDTH)/2.0f;
+            screen_y = 0;
             break;
         case SCREEN_SCALE_ORIG:
             screen_x = 150;
@@ -184,13 +186,24 @@ void PSP2_Video_Init(int screen_scale)
             screen_scale_h = SCREEN_H/(float)SCREENHEIGHT;
             break;
     }
+    if (font_tex == NULL) {
+        vita2d_init();
+        font_tex = vita2d_create_empty_texture(SCREEN_W, SCREEN_H);
+        font_data = (uint32_t*) vita2d_texture_get_datap(font_tex);
 
-    font_tex = vita2d_create_empty_texture(SCREEN_W, SCREEN_H);
-    font_data = (uint32_t*) vita2d_texture_get_datap(font_tex);
+        pal_tex = vita2d_create_empty_texture_format(SCREENWIDTH, SCREENHEIGHT, SCE_GXM_TEXTURE_FORMAT_P8_1BGR);
+        paltex_data = (byte*) vita2d_texture_get_datap(pal_tex);
+        palette_data = (uint32_t *)vita2d_texture_get_palette(pal_tex);
+    }
 
-    pal_tex = vita2d_create_empty_texture_format(SCREENWIDTH, SCREENHEIGHT, SCE_GXM_TEXTURE_FORMAT_P8_1BGR);
-    paltex_data = (byte*) vita2d_texture_get_datap(pal_tex);
-    palette_data = (uint32_t *)vita2d_texture_get_palette(pal_tex);
+    if (bilinear_enabled == true)
+    {
+        vita2d_texture_set_filters(pal_tex, SCE_GXM_TEXTURE_FILTER_POINT, SCE_GXM_TEXTURE_FILTER_LINEAR);
+    }
+    else
+    {
+        vita2d_texture_set_filters(pal_tex, SCE_GXM_TEXTURE_FILTER_POINT, SCE_GXM_TEXTURE_FILTER_POINT);
+    }
 }
 
 void PSP2_Video_FillScreen(uint32_t size)
